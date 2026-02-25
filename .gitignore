@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# CLion / IntelliJ
+.idea/
+cmake-build-*/
