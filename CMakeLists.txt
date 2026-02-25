@@ -7,10 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(booking_core
         src/domain/Booking.cpp
         src/domain/Hall.cpp
-        src/domain/RegularSeat.cpp
-        src/domain/Seat.cpp
         src/domain/Session.cpp
-        src/domain/VipSeat.cpp
+        src/domain/Errors.cpp
 
         src/services/BookingService.cpp
         src/services/IdGenerator.cpp
@@ -24,12 +22,24 @@ add_library(booking_core
         src/tui/MainMenuScreen.cpp
         src/tui/SeatMapScreen.cpp
         src/tui/SessionsScreen.cpp
-        src/domain/RegularSeat.cpp
-        src/domain/Errors.cpp
+        include/booking/domain/Session.hpp
+        include/booking/domain/Booking.hpp
 )
 
-target_include_directories(booking_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(booking_core
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-add_executable(booking_tui src/main.cpp
-        src/domain/RegularSeat.cpp)
+add_executable(booking_tui
+        src/main.cpp
+        include/booking/domain/Session.hpp
+        include/booking/domain/Booking.hpp
+)
+
 target_link_libraries(booking_tui PRIVATE booking_core)
+
+target_include_directories(booking_tui
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
