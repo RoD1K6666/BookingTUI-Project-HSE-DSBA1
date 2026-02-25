@@ -34,7 +34,6 @@ add_executable(booking_tui
 
 target_link_libraries(booking_tui PRIVATE booking_core)
 
-# можно оставить, чтобы IDE точно видела include для exe
 target_include_directories(booking_tui
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
