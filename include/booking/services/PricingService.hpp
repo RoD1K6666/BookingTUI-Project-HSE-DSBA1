@@ -1,17 +1,6 @@
-
-//===============================================================================//
-//              ВРЕМЕННАЯ РЕАЛИЗАЦИЯ КОТОРАЯ НУЖНА ДЛЯ ПРОМЕЖУТОЧНОГО ТЕСТА//
-//===============================================================================//
-
-
-
-
-
-
 #pragma once
 
-#include <cstdint>
-#include "booking/domain/Types.hpp"   // SeatType
+#include "booking/domain/Types.hpp"
 
 namespace booking::services {
 
@@ -19,7 +8,8 @@ namespace booking::services {
     public:
         virtual ~PricingService() = default;
 
-        virtual std::int64_t priceCents(booking::domain::SeatType type) const = 0;
+        [[nodiscard]] virtual booking::domain::Money
+        priceCents(booking::domain::SeatType type) const = 0;
     };
 
 }

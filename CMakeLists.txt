@@ -8,7 +8,6 @@ add_library(booking_core
         src/domain/Booking.cpp
         src/domain/Hall.cpp
         src/domain/Session.cpp
-        src/domain/Errors.cpp
 
         src/services/BookingService.cpp
         src/services/IdGenerator.cpp
@@ -22,8 +21,6 @@ add_library(booking_core
         src/tui/MainMenuScreen.cpp
         src/tui/SeatMapScreen.cpp
         src/tui/SessionsScreen.cpp
-        include/booking/domain/Session.hpp
-        include/booking/domain/Booking.hpp
 )
 
 target_include_directories(booking_core
@@ -33,12 +30,11 @@ target_include_directories(booking_core
 
 add_executable(booking_tui
         src/main.cpp
-        include/booking/domain/Session.hpp
-        include/booking/domain/Booking.hpp
 )
 
 target_link_libraries(booking_tui PRIVATE booking_core)
 
+# можно оставить, чтобы IDE точно видела include для exe
 target_include_directories(booking_tui
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include

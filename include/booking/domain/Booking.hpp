@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <string>
+#include <utility>
 
 #include "booking/domain/Types.hpp"
 
@@ -13,7 +13,7 @@ namespace booking::domain {
                 SessionId sessionId,
                 SeatPos seatPos,
                 SeatType seatType,
-                std::int64_t priceCents)
+                Money priceCents)
             : id_(std::move(id)),
               sessionId_(std::move(sessionId)),
               seatPos_(seatPos),
@@ -24,14 +24,14 @@ namespace booking::domain {
         [[nodiscard]] const SessionId& sessionId() const noexcept { return sessionId_; }
         [[nodiscard]] SeatPos seatPos() const noexcept { return seatPos_; }
         [[nodiscard]] SeatType seatType() const noexcept { return seatType_; }
-        [[nodiscard]] std::int64_t priceCents() const noexcept { return priceCents_; }
+        [[nodiscard]] Money priceCents() const noexcept { return priceCents_; }
 
     private:
         BookingId id_;
         SessionId sessionId_;
         SeatPos seatPos_;
         SeatType seatType_;
-        std::int64_t priceCents_;
+        Money priceCents_;
     };
 
-}
+} // namespace booking::domain

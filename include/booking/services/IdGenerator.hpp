@@ -1,15 +1,6 @@
-
-//===============================================================================//
-//              ВРЕМЕННАЯ РЕАЛИЗАЦИЯ КОТОРАЯ НУЖНА ДЛЯ ПРОМЕЖУТОЧНОГО ТЕСТА//
-//===============================================================================//
-
-
-
-
 #pragma once
 
-#include <string>
-#include "booking/domain/Types.hpp"   // BookingId
+#include "booking/domain/Types.hpp"
 
 namespace booking::services {
 
@@ -17,7 +8,7 @@ namespace booking::services {
     public:
         virtual ~IdGenerator() = default;
 
-        virtual booking::domain::BookingId nextBookingId() = 0;
+        [[nodiscard]] virtual booking::domain::BookingId nextBookingId() = 0;
     };
 
-} // namespace booking::services
+}
