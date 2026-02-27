@@ -22,6 +22,7 @@ add_library(booking_core
         src/tui/SeatMapScreen.cpp
         src/tui/SessionsScreen.cpp
         include/booking/persistence/StorageError.h
+        include/booking/persistence/Store.hpp
 )
 
 target_include_directories(booking_core
