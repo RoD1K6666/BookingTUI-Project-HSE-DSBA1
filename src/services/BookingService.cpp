@@ -21,7 +21,12 @@ namespace booking::services {
         session.book(pos);
 
         booking::domain::BookingId bookingId = ids_.nextBookingId();
-        return booking::domain::Booking{std::move(bookingId), session.id(), pos, type, price};
+        bookings_.emplace_back(bookingId, session.id(), pos, type, price);
+        return bookings_.back();
+    }
+
+    const std::vector<booking::domain::Booking>& BookingService::listBookings() const {
+        return bookings_;
     }
 
 }
