@@ -24,6 +24,9 @@ namespace booking::services {
         [[nodiscard]] std::optional<booking::domain::Booking>
         findBooking(const booking::domain::BookingId& id) const;
 
+        void cancelBooking(const booking::domain::BookingId& id,
+                           booking::domain::Session& session);
+
     private:
         PricingService& pricing_;
         IdGenerator& ids_;

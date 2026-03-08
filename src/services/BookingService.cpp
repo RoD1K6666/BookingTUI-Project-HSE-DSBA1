@@ -39,4 +39,19 @@ namespace booking::services {
         return std::nullopt; // не нашли — возвращаем "пусто"
     }
 
+    void BookingService::cancelBooking(const booking::domain::BookingId& id,
+                                       booking::domain::Session& session) {
+        auto it = std::find_if(bookings_.begin(), bookings_.end(),
+            [&id](const booking::domain::Booking& b) {
+                return b.id() == id;
+            });
+
+        if (it == bookings_.end()) {
+            throw booking::domain::BookingError("Booking not found: " + id);
+        }
+
+        session.unbook(it->seatPos());
+        bookings_.erase(it);
+    }
+
 }
