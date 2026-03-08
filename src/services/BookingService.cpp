@@ -29,4 +29,14 @@ namespace booking::services {
         return bookings_;
     }
 
+    std::optional<booking::domain::Booking>
+    BookingService::findBooking(const booking::domain::BookingId& id) const {
+        for (const auto& b : bookings_) {
+            if (b.id() == id) {
+                return b; // нашли - возвращаем бронь
+            }
+        }
+        return std::nullopt; // не нашли — возвращаем "пусто"
+    }
+
 }

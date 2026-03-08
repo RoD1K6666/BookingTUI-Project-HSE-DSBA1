@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <optional>
 
 #include "booking/domain/Types.hpp"
 #include "booking/domain/Booking.hpp"
@@ -19,6 +20,9 @@ namespace booking::services {
                                                              booking::domain::SeatPos pos);
 
         [[nodiscard]] const std::vector<booking::domain::Booking>& listBookings() const;
+
+        [[nodiscard]] std::optional<booking::domain::Booking>
+        findBooking(const booking::domain::BookingId& id) const;
 
     private:
         PricingService& pricing_;
