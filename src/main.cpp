@@ -35,7 +35,7 @@ int main() {
         auto hall = std::make_shared<Hall>(3, 4);
         hall->makeVip({0, 0});
 
-        Session session("s1", "Test movie", hall);
+        Session session("s1", "Test movie", HallId("hall1"), hall);
 
         DummyPricingService pricing;
         DummyIdGenerator ids;
