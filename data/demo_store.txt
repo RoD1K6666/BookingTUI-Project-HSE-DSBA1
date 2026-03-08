@@ -1,0 +1,9 @@
+2
+s1|Friday 13th|hall_main
+s2|Avatar 2|hall_vip
+3
+b1|s1|2|3|0|1000
+b2|s1|2|4|1|2000
+b3|s2|0|0|0|1000
+1
+42|2|7|8
