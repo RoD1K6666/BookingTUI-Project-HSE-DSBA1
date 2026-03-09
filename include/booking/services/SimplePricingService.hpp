@@ -4,8 +4,9 @@
 #include "booking/services/PricingService.hpp"
 
 namespace booking::services {
-    constexpr double kVipMultiplier = 1.5;
+    constexpr double kVipMultiplier = 1.5; // VIP seat price multiplier
 
+    // Concrete pricing: Regular = base price, VIP = base * kVipMultiplier
     class SimplePricingService final : public PricingService {
     public:
         explicit SimplePricingService(booking::domain::Money basePrice);

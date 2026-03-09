@@ -20,7 +20,7 @@ namespace booking::domain {
         const SessionId& id() const noexcept;
         const std::string& title() const noexcept;
 
-        const Hall& hall() const noexcept;
+        const Hall& hall() const noexcept; // доступ к залу (без владения снаружи)
 
         bool isBooked(SeatPos pos) const;
         void book(SeatPos pos);
@@ -36,4 +36,4 @@ namespace booking::domain {
         std::unordered_set<SeatPos, SeatPosHash> booked_;
     };
 
-}
+} // namespace booking::domain
