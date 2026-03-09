@@ -13,8 +13,10 @@ namespace booking::domain {
     public:
         Session(SessionId id,
                 std::string title,
+                HallId hallId,
                 std::shared_ptr<const Hall> hall);
 
+        const HallId& hallId() const noexcept;
         const SessionId& id() const noexcept;
         const std::string& title() const noexcept;
 
@@ -29,6 +31,7 @@ namespace booking::domain {
     private:
         SessionId id_;
         std::string title_;
+        HallId hallId_;
         std::shared_ptr<const Hall> hall_;
         std::unordered_set<SeatPos, SeatPosHash> booked_;
     };

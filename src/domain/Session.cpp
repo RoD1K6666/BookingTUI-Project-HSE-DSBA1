@@ -3,9 +3,10 @@
 
 namespace booking::domain {
 
-    Session::Session(SessionId id, std::string title, std::shared_ptr<const Hall> hall)
+    Session::Session(SessionId id, std::string title, HallId hallId, std::shared_ptr<const Hall> hall)
         : id_(std::move(id)),
           title_(std::move(title)),
+          hallId_(std::move(hallId)),
           hall_(std::move(hall)) {
         if (!hall_) {
             throw BookingError("Session hall pointer is null");
@@ -14,16 +15,17 @@ namespace booking::domain {
 
     const SessionId& Session::id() const noexcept { return id_; }
     const std::string& Session::title() const noexcept { return title_; }
+    const HallId& Session::hallId() const noexcept { return hallId_; }
 
     const Hall& Session::hall() const noexcept { return *hall_; }
 
     bool Session::isBooked(SeatPos pos) const {
-        (void)hall().seatAt(pos); // проверка границ
+        (void)hall().seatAt(pos);
         return booked_.contains(pos);
     }
 
     void Session::book(SeatPos pos) {
-        (void)hall().seatAt(pos); // проверка границ
+        (void)hall().seatAt(pos);
         if (booked_.contains(pos)) {
             throw SeatUnavailable(pos);
         }
@@ -31,7 +33,7 @@ namespace booking::domain {
     }
 
     void Session::unbook(SeatPos pos) {
-        (void)hall().seatAt(pos); // проверка границ
+        (void)hall().seatAt(pos);
         booked_.erase(pos);
     }
 
@@ -39,4 +41,4 @@ namespace booking::domain {
         return booked_;
     }
 
-} // namespace booking::domain
+}

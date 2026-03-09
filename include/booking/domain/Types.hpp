@@ -8,6 +8,7 @@ namespace booking::domain {
 
     using SessionId = std::string;
     using BookingId = std::string;
+    using HallId = std::string;
     using Money = std::int64_t; // cents/pennies
 
     struct SeatPos {
