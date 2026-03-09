@@ -5,7 +5,7 @@
 #ifndef BOOKINGTUI_STORAGEERROR_H
 #define BOOKINGTUI_STORAGEERROR_H
 
-#endif //BOOKINGTUI_STORAGEERROR_H
+#endif
 
 #pragma once
 
