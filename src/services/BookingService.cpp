@@ -13,13 +13,17 @@ namespace booking::services {
 
     booking::domain::Booking
     BookingService::createBooking(booking::domain::Session& session, booking::domain::SeatPos pos) {
+        // Look up the seat and determine its type
         const booking::domain::Seat& seat = session.hall().seatAt(pos);
         const booking::domain::SeatType type = seat.type();
 
+        // Calculate price based on seat type
         const booking::domain::Money price = pricing_.priceCents(type);
 
+        // Mark the seat as booked in the session
         session.book(pos);
 
+        // Generate a unique ID and store the booking
         booking::domain::BookingId bookingId = ids_.nextBookingId();
         bookings_.emplace_back(bookingId, session.id(), pos, type, price);
         return bookings_.back();
@@ -33,14 +37,15 @@ namespace booking::services {
     BookingService::findBooking(const booking::domain::BookingId& id) const {
         for (const auto& b : bookings_) {
             if (b.id() == id) {
-                return b; // нашли - возвращаем бронь
+                return b; // found - return the booking
             }
         }
-        return std::nullopt; // не нашли — возвращаем "пусто"
+        return std::nullopt; // not found - return empty
     }
 
     void BookingService::cancelBooking(const booking::domain::BookingId& id,
                                        booking::domain::Session& session) {
+        // Search for the booking by ID
         auto it = std::find_if(bookings_.begin(), bookings_.end(),
             [&id](const booking::domain::Booking& b) {
                 return b.id() == id;
@@ -50,6 +55,7 @@ namespace booking::services {
             throw booking::domain::BookingError("Booking not found: " + id);
         }
 
+        // Free the seat and remove the booking
         session.unbook(it->seatPos());
         bookings_.erase(it);
     }
