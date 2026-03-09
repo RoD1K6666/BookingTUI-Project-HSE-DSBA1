@@ -62,3 +62,39 @@ TEST(BookingServiceTest, FindBookingReturnsCorrectBooking) {
     auto notFound = service.findBooking("booking-999");
     EXPECT_FALSE(notFound.has_value());
 }
+
+// Booking cancellation and error handling tests
+
+TEST(BookingServiceTest, CancelBookingRemovesIt) {
+    auto [hall, session] = makeTestSession();
+    SimplePricingService pricing(1000);
+    SequentialIdGenerator ids;
+    BookingService service(pricing, ids);
+
+    service.createBooking(session, {1, 0});
+    EXPECT_EQ(service.listBookings().size(), 1);
+
+    service.cancelBooking("booking-1", session);
+    EXPECT_EQ(service.listBookings().size(), 0);
+    EXPECT_FALSE(session.isBooked({1, 0}));
+}
+
+TEST(BookingServiceTest, CancelNonExistentBookingThrows) {
+    auto [hall, session] = makeTestSession();
+    SimplePricingService pricing(1000);
+    SequentialIdGenerator ids;
+    BookingService service(pricing, ids);
+
+    EXPECT_THROW(service.cancelBooking("booking-999", session), BookingError);
+}
+
+TEST(BookingServiceTest, BookingAlreadyTakenSeatThrows) {
+    auto [hall, session] = makeTestSession();
+    SimplePricingService pricing(1000);
+    SequentialIdGenerator ids;
+    BookingService service(pricing, ids);
+
+    service.createBooking(session, {1, 0});
+
+    EXPECT_THROW(service.createBooking(session, {1, 0}), SeatUnavailable);
+}
