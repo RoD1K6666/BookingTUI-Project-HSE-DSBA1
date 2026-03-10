@@ -28,6 +28,13 @@ void App::run() {
                 case AppState::Bookings: bookingsMenu.render(*this); break;
                 case AppState::Exit: break;
             }
+        } catch (const BookingError& e) {
+            std::cout << "\n[ОШИБКА БИЗНЕС-ЛОГИКИ]: " << e.what() << "\nНажмите Enter...";
+            clearInput(); std::cin.get();
+        } catch (const std::exception& e) {
+            std::cout << "\n[СИСТЕМНАЯ ОШИБКА]: " << e.what() << "\n";
+            current_state = AppState::MainMenu;
+        }
     }
     std::cout << "Завершение работы.\n";
 }
