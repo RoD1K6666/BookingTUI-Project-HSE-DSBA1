@@ -32,5 +32,26 @@ void SeatMapScreen::render(App& app) {
             }
             std::cout << "\n";
         }
+        std::cout << "WASD + Enter (Движение) | x + Enter (Выбрать) | b + Enter (Бронь) | q + Enter (Назад)\n> ";
+        char cmd; std::cin >> cmd;
+
+        switch (cmd) {
+            case 'w': if (cur_r > 0) cur_r--; break;
+            case 's': if (cur_r < session.rows - 1) cur_r++; break;
+            case 'a': if (cur_c > 0) cur_c--; break;
+            case 'd': if (cur_c < session.cols - 1) cur_c++; break;
+            case 'x':
+                if (std::holds_alternative<Free>(session.seat_grid[cur_r][cur_c].state)) selected.push_back({cur_r, cur_c});
+                break;
+            case 'b':
+                if (!selected.empty()) {
+                    std::cout << "Введите имя: "; std::string name; std::cin >> name;
+                    Booking b = app.getService().book(session.id, name, selected);
+                    std::cout << "УСПЕШНО! Бронь ID: " << b.id << "\n";
+                    selecting = false; app.setState(AppState::MainMenu);
+                }
+                break;
+            case 'q': selecting = false; app.setState(AppState::Sessions); break;
+        }
     }
 }
