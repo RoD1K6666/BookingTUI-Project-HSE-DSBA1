@@ -15,7 +15,7 @@ using namespace booking::services;
 static std::pair<std::shared_ptr<Hall>, Session> makeTestSession() {
     auto hall = std::make_shared<Hall>(3, 4);
     hall->makeVip({0, 0});
-    Session session("s1", "Test Movie", hall);
+    Session session("s1", "Test Movie", "hall-1", hall);
     return {hall, std::move(session)};
 }
 
