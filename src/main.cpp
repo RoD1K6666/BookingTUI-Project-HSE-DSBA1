@@ -1,8 +1,8 @@
 #include "booking/tui/App.hpp"
 #include "booking/tui/Mock.hpp"
-
+//ВРЕМЕННЫЙ МЕЙН
 // ─────────────────────────────────────────────────────────────────────────────
-//  When teammates' persistence layer is ready, replace makeMockData() with:
+//  когда остальные реди будутзаменить makeMockData() with:
 //
 //    #include "booking/persistence/StoreRepository.hpp"
 //    #include "booking/services/SequentialIdGenerator.hpp"
