@@ -1,8 +1,7 @@
 #include "booking/tui/App.hpp"
 #include "booking/tui/Mock.hpp"
-//ВРЕМЕННЫЙ МЕЙН
 // ─────────────────────────────────────────────────────────────────────────────
-//  когда остальные реди будутзаменить makeMockData() with:
+//  это временное решение, можно при желание подключть API и заменить makeMockData() на:
 //
 //    #include "booking/persistence/StoreRepository.hpp"
 //    #include "booking/services/SequentialIdGenerator.hpp"
@@ -25,8 +24,6 @@
 
 int main() {
     try {
-        // All objects live in this scope — service is passed by reference so
-        // it must outlive App.
         auto [ids, pricing, service, sessions] = booking::tui::makeMockData();
 
         booking::tui::App app(*service, std::move(sessions));
