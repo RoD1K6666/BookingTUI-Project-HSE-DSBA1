@@ -38,7 +38,7 @@ makeMockData()
 {
     // ── Id generator & pricing (owned here, passed by ref to service) ──────
     auto ids     = std::make_unique<services::SequentialIdGenerator>();
-    auto pricing = std::make_unique<services::SimplePricingService>();
+    auto pricing = std::make_unique<services::SimplePricingService>(50000);
 
     auto service = std::make_unique<services::BookingService>(*pricing, *ids);
 
