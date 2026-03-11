@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(booking_core
-        src/domain/Booking.cpp
         src/domain/Hall.cpp
         src/domain/Session.cpp
 
@@ -21,10 +20,6 @@ add_library(booking_core
         src/tui/MainMenuScreen.cpp
         src/tui/SeatMapScreen.cpp
         src/tui/SessionsScreen.cpp
-        include/booking/persistence/StorageError.h
-        include/booking/persistence/Store.hpp
-        include/booking/persistence/StoreRepository.hpp
-        include/booking/persistence/AtomicFileWriter.hpp
 )
 
 target_include_directories(booking_core
@@ -37,12 +32,6 @@ add_executable(booking_tui
 )
 
 target_link_libraries(booking_tui PRIVATE booking_core)
-
-target_include_directories(booking_tui
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
 
 # Google Test
 include(FetchContent)
@@ -58,6 +47,7 @@ enable_testing()
 add_executable(booking_tests
         tests/test_pricing.cpp
         tests/test_booking_service.cpp
+        tests/test_persistence.cpp
 )
 
 target_link_libraries(booking_tests PRIVATE booking_core GTest::gtest_main)

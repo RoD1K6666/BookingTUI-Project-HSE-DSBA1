@@ -34,4 +34,4 @@ namespace booking::domain {
         Money priceCents_;
     };
 
-} // namespace booking::domain
+}
