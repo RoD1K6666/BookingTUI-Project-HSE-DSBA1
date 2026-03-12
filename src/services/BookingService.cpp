@@ -60,4 +60,13 @@ namespace booking::services {
         bookings_.erase(it);
     }
 
+    BookingResult BookingService::tryBook(booking::domain::Session& session,
+                                       booking::domain::SeatPos pos) {
+        try {
+            return createBooking(session, pos);
+        } catch (const booking::domain::BookingError& e) {
+            return BookingFailure{e.what()};
+        }
+    }
+
 }

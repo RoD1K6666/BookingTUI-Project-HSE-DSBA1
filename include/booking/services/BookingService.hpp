@@ -6,6 +6,7 @@
 #include "booking/domain/Types.hpp"
 #include "booking/domain/Booking.hpp"
 #include "booking/domain/Session.hpp"
+#include "booking/services/BookingResult.hpp"
 
 namespace booking::services {
 
@@ -30,6 +31,9 @@ namespace booking::services {
         // Cancels a booking: frees the seat and removes it from storage
         void cancelBooking(const booking::domain::BookingId& id,
                            booking::domain::Session& session);
+
+        [[nodiscard]] BookingResult tryBook(booking::domain::Session& session,
+                                     booking::domain::SeatPos pos);
 
     private:
         PricingService& pricing_;
