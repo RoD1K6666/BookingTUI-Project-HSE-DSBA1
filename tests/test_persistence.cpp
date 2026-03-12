@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <filesystem>
 #include <memory>
+#include <fstream>
 
 #include "booking/persistence/StoreRepository.hpp"
 #include "booking/persistence/Store.hpp"
@@ -8,6 +9,7 @@
 #include "booking/domain/Hall.hpp"
 #include "booking/domain/Session.hpp"
 #include "booking/domain/Booking.hpp"
+#include "booking/persistence/AtomicFileWriter.hpp"
 
 using namespace booking::persistence;
 using namespace booking::domain;
@@ -30,9 +32,9 @@ Store makeStoreWithOneSession() {
     return store;
 }
 
-} // namespace
+}
 
-// ─── Save / Load roundtrip ────────────────────────────────────────────────────
+// Save / Load roundtrip
 
 TEST(StoreRepositoryTest, EmptyStoreSavesAndLoads) {
     TempFile tmp("test_empty.dat");
@@ -121,9 +123,46 @@ TEST(StoreRepositoryTest, MultipleBookingsRoundtrip) {
     EXPECT_EQ(loaded.bookings[1].id(), "b-2");
 }
 
-// ─── Error handling ───────────────────────────────────────────────────────────
+// Error handling
 
 TEST(StoreRepositoryTest, LoadNonExistentFileThrows) {
     StoreRepository repo;
     EXPECT_THROW(repo.load("/nonexistent/path/no_file.dat"), StorageError);
+}
+
+// AtomicFileWriter tests
+
+TEST(AtomicFileWriterTest, CommitCreatesFile) {
+    TempFile tmp("test_atomic_commit.dat");
+    {
+        AtomicFileWriter writer(tmp.path);
+        writer.stream() << "hello";
+        writer.commit();
+    }
+    EXPECT_TRUE(std::filesystem::exists(tmp.path));
+
+    std::ifstream in(tmp.path);
+    std::string content;
+    std::getline(in, content);
+    EXPECT_EQ(content, "hello");
+}
+
+TEST(AtomicFileWriterTest, DestructorWithoutCommitDeletesTempFile) {
+    TempFile tmp("test_atomic_no_commit.dat");
+    {
+        AtomicFileWriter writer(tmp.path);
+        writer.stream() << "should not appear";
+    }
+    EXPECT_FALSE(std::filesystem::exists(tmp.path));
+}
+
+TEST(AtomicFileWriterTest, MoveConstructorWorks) {
+    TempFile tmp("test_atomic_move.dat");
+    {
+        AtomicFileWriter writer1(tmp.path);
+        writer1.stream() << "moved";
+        AtomicFileWriter writer2(std::move(writer1));
+        writer2.commit();
+    }
+    EXPECT_TRUE(std::filesystem::exists(tmp.path));
 }
