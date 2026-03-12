@@ -47,3 +47,67 @@ TEST(HallTest, OutOfBoundsSeatThrows) {
     EXPECT_THROW(hall.seatAt({0, 10}), InvalidSeat);
     EXPECT_THROW(hall.seatAt({-1, 0}), InvalidSeat);
 }
+
+// Session tests
+
+TEST(SessionTest, ConstructorStoresData) {
+    auto hall = std::make_shared<Hall>(2, 2);
+    Session s("s1", "Movie", "h1", hall);
+    EXPECT_EQ(s.id(), "s1");
+    EXPECT_EQ(s.title(), "Movie");
+    EXPECT_EQ(s.hallId(), "h1");
+}
+
+TEST(SessionTest, HallAccessor) {
+    auto hall = std::make_shared<Hall>(3, 4);
+    Session s("s1", "Movie", "h1", hall);
+    EXPECT_EQ(s.hall().rows(), 3);
+    EXPECT_EQ(s.hall().cols(), 4);
+}
+
+TEST(SessionTest, NullHallThrows) {
+    EXPECT_THROW(Session("s1", "Movie", "h1", nullptr), BookingError);
+}
+
+TEST(SessionTest, BookAndIsBooked) {
+    auto hall = std::make_shared<Hall>(2, 2);
+    Session s("s1", "Movie", "h1", hall);
+
+    EXPECT_FALSE(s.isBooked({0, 0}));
+    s.book({0, 0});
+    EXPECT_TRUE(s.isBooked({0, 0}));
+    EXPECT_FALSE(s.isBooked({0, 1}));
+}
+
+TEST(SessionTest, BookSameSeatTwiceThrows) {
+    auto hall = std::make_shared<Hall>(2, 2);
+    Session s("s1", "Movie", "h1", hall);
+
+    s.book({0, 0});
+    EXPECT_THROW(s.book({0, 0}), SeatUnavailable);
+}
+
+TEST(SessionTest, UnbookFreesSeat) {
+    auto hall = std::make_shared<Hall>(2, 2);
+    Session s("s1", "Movie", "h1", hall);
+
+    s.book({0, 0});
+    s.unbook({0, 0});
+    EXPECT_FALSE(s.isBooked({0, 0}));
+}
+
+TEST(SessionTest, BookedSeatsReturnsSet) {
+    auto hall = std::make_shared<Hall>(2, 2);
+    Session s("s1", "Movie", "h1", hall);
+
+    s.book({0, 0});
+    s.book({1, 1});
+    EXPECT_EQ(s.bookedSeats().size(), 2);
+}
+
+TEST(SessionTest, BookOutOfBoundsThrows) {
+    auto hall = std::make_shared<Hall>(2, 2);
+    Session s("s1", "Movie", "h1", hall);
+
+    EXPECT_THROW(s.book({5, 5}), InvalidSeat);
+}
