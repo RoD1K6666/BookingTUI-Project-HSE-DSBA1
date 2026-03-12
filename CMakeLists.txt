@@ -48,6 +48,7 @@ add_executable(booking_tests
         tests/test_pricing.cpp
         tests/test_booking_service.cpp
         tests/test_persistence.cpp
+        tests/test_domain.cpp
 )
 
 target_link_libraries(booking_tests PRIVATE booking_core GTest::gtest_main)
