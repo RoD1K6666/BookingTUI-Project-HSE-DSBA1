@@ -111,3 +111,22 @@ TEST(SessionTest, BookOutOfBoundsThrows) {
 
     EXPECT_THROW(s.book({5, 5}), InvalidSeat);
 }
+
+// Exception tests
+
+TEST(ExceptionTest, InvalidSeatStoresPosition) {
+    InvalidSeat e({3, 7});
+    EXPECT_EQ(e.pos().row, 3);
+    EXPECT_EQ(e.pos().col, 7);
+}
+
+TEST(ExceptionTest, SessionNotFoundStoresId) {
+    SessionNotFound e("s-42");
+    EXPECT_EQ(e.id(), "s-42");
+}
+
+TEST(ExceptionTest, SeatUnavailableStoresPosition) {
+    SeatUnavailable e({1, 2});
+    EXPECT_EQ(e.pos().row, 1);
+    EXPECT_EQ(e.pos().col, 2);
+}
