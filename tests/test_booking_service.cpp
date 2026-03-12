@@ -7,6 +7,7 @@
 #include "booking/services/BookingService.hpp"
 #include "booking/services/SimplePricingService.hpp"
 #include "booking/services/SequentialIdGenerator.hpp"
+#include "booking/services/BookingResult.hpp"
 
 using namespace booking::domain;
 using namespace booking::services;
@@ -97,4 +98,39 @@ TEST(BookingServiceTest, BookingAlreadyTakenSeatThrows) {
     service.createBooking(session, {1, 0});
 
     EXPECT_THROW(service.createBooking(session, {1, 0}), SeatUnavailable);
+}
+
+TEST(BookingServiceTest, TryBookReturnsVariantSuccess) {
+    auto [hall, session] = makeTestSession();
+    SimplePricingService pricing(1000);
+    SequentialIdGenerator ids;
+    BookingService service(pricing, ids);
+
+    BookingResult result = service.tryBook(session, {1, 0});
+
+    EXPECT_TRUE(std::holds_alternative<Booking>(result));
+    std::visit([](auto& val) {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, Booking>) {
+            EXPECT_EQ(val.id(), "booking-1");
+        }
+    }, result);
+}
+
+TEST(BookingServiceTest, TryBookReturnsVariantFailure) {
+    auto [hall, session] = makeTestSession();
+    SimplePricingService pricing(1000);
+    SequentialIdGenerator ids;
+    BookingService service(pricing, ids);
+
+    service.createBooking(session, {1, 0});
+    BookingResult result = service.tryBook(session, {1, 0});
+
+    EXPECT_TRUE(std::holds_alternative<BookingFailure>(result));
+    std::visit([](auto& val) {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, BookingFailure>) {
+            EXPECT_FALSE(val.reason.empty());
+        }
+    }, result);
 }

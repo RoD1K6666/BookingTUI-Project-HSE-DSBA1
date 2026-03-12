@@ -7,6 +7,8 @@
 #include <limits>
 #include <cctype>
 #include <stdexcept>
+#include <variant>
+#include "booking/services/BookingResult.hpp"
 
 namespace booking::tui {
 
@@ -110,24 +112,26 @@ domain::SeatPos SeatMapScreen::askSeat() const {
     return {row, col};
 }
 
-// ── Book one seat ─────────────────────────────────────────────────────────────
+// ── Book one seat (uses std::variant + std::visit instead of exceptions) ─────
 void SeatMapScreen::doBook(domain::SeatPos pos) {
-    try {
-        // createBooking marks the seat via session.book(pos) internally
-        domain::Booking b = app_.service().createBooking(session_, pos);
+    services::BookingResult result = app_.service().tryBook(session_, pos);
 
-        std::cout << "\n  ✔ Booking confirmed!\n";
-        std::cout << "    Booking ID : " << b.id()         << "\n";
-        std::cout << "    Session    : " << b.sessionId()  << "\n";
-        std::cout << "    Seat       : "
-                  << static_cast<char>('A' + b.seatPos().row)
-                  << (b.seatPos().col + 1)                 << "\n";
-        std::cout << "    Type       : "
-                  << (b.seatType() == domain::SeatType::Vip ? "VIP" : "Regular") << "\n";
-        std::cout << "    Price      : " << b.priceCents() / 100.0 << " ₽\n";
-    } catch (const std::exception& e) {
-        std::cout << "  [!] Booking failed: " << e.what() << "\n";
-    }
+    std::visit([](auto& val) {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, domain::Booking>) {
+            std::cout << "\n  ✔ Booking confirmed!\n";
+            std::cout << "    Booking ID : " << val.id()         << "\n";
+            std::cout << "    Session    : " << val.sessionId()  << "\n";
+            std::cout << "    Seat       : "
+                      << static_cast<char>('A' + val.seatPos().row)
+                      << (val.seatPos().col + 1)                 << "\n";
+            std::cout << "    Type       : "
+                      << (val.seatType() == domain::SeatType::Vip ? "VIP" : "Regular") << "\n";
+            std::cout << "    Price      : " << val.priceCents() / 100.0 << " ₽\n";
+        } else {
+            std::cout << "  [!] Booking failed: " << val.reason << "\n";
+        }
+    }, result);
 }
 
-} // namespace booking::tui
+}
