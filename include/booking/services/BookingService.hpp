@@ -32,8 +32,9 @@ namespace booking::services {
         void cancelBooking(const booking::domain::BookingId& id,
                            booking::domain::Session& session);
 
+        // Variant-based booking: returns Booking on success or BookingFailure on error
         [[nodiscard]] BookingResult tryBook(booking::domain::Session& session,
-                                     booking::domain::SeatPos pos);
+                                            booking::domain::SeatPos pos);
 
     private:
         PricingService& pricing_;

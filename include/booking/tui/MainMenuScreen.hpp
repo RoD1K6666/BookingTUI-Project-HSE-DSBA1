@@ -17,4 +17,4 @@ private:
     App& app_;
 };
 
-} // namespace booking::tui
+}

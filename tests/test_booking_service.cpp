@@ -133,5 +133,4 @@ TEST(BookingServiceTest, TryBookReturnsVariantFailure) {
             EXPECT_FALSE(val.reason.empty());
         }
     }, result);
-
 }
